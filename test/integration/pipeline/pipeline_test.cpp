@@ -23,7 +23,7 @@ using namespace common_constants;
 class PipelineIntegrationTest : public AcceptanceFixture {
  public:
   static constexpr iroha::StorageType storage_types[] = {
-      iroha::StorageType::kPostgres, iroha::StorageType::kRocksDb};
+      iroha::StorageType::kRocksDb};
 
   /**
    * prepares signed transaction with CreateDomain command

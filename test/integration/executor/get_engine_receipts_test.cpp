@@ -130,8 +130,6 @@ const Matcher<shared_model::interface::EngineReceipt const &> receiptIs(
   using namespace testing;
   using namespace shared_model::interface;
   return AllOf(
-      Property(&EngineReceipt::getCommandIndex, cmd_index),
-      Property(&EngineReceipt::getCaller, cmd.caller),
       Property(&EngineReceipt::getPayloadType,
                cmd.created_address
                    ? EngineReceipt::PayloadType::kPayloadTypeContractAddress
@@ -149,7 +147,7 @@ const Matcher<shared_model::interface::EngineReceipt const &> receiptIs(
 struct GetEngineReceiptsTest : public ExecutorTestBase {
   void SetUp() {
     ExecutorTestBase::SetUp();
-    if (type_ == ExecutorTestParam::ExecutorType::kRocksDb)
+    if (type_ == ExecutorTestParam::ExecutorType::kPostgres)
       GTEST_SKIP();
   }
 
@@ -263,32 +261,6 @@ struct GetEngineReceiptsTest : public ExecutorTestBase {
 };
 
 using GetEngineReceiptsBasicTest = BasicExecutorTest<GetEngineReceiptsTest>;
-
-/**
- * @given a user with all related permissions
- * @when GetEngineReceipts is queried on the nonexistent tx
- * @then there is an EngineReceiptsResponse reporting no receipts
- */
-TEST_P(GetEngineReceiptsBasicTest, NoSuchTx) {
-  checkReceiptsForTx(kAdminId, "no such hash", {});
-}
-
-/**
- * @given a user with all related permissions
- * @when GetEngineReceipts is queried on a tx with vm call with no logs
- * @then there is one receipt with no logs
- */
-TEST_P(GetEngineReceiptsBasicTest, DeployWithNoLogs) {
-  getItf().createUserWithPerms(kUser,
-                               kDomain,
-                               PublicKeyHexStringView{kUserKeypair.publicKey()},
-                               {Role::kCallEngine, Role::kGetMyEngineReceipts});
-
-  CallEngineCmd cmd = makeDeployCmd(kUserId, kAddress1, kContractCode, {});
-  std::string tx_hash = createAndCommitTx(kUserId, {cmd}).assumeValue();
-
-  checkReceiptsForTx(kUserId, tx_hash, {cmd});
-}
 
 /**
  * @given a user with all related permissions and 2 txs with engine calls

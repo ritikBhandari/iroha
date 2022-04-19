@@ -129,7 +129,7 @@ class BinaryTestFixture
   {
    public:
     static constexpr iroha::StorageType storage_types[] = {
-        iroha::StorageType::kPostgres, iroha::StorageType::kRocksDb};
+        iroha::StorageType::kRocksDb};
 
     Launcher launcher;
 

@@ -281,7 +281,7 @@ struct BatchPipelineTestByDatabaseAndBatchType
 INSTANTIATE_TEST_SUITE_P(
     DifferentStorageTypes,
     BatchPipelineTest,
-    Values(StorageType::kPostgres, StorageType::kRocksDb),
+    Values(StorageType::kRocksDb),
     [](const testing::TestParamInfo<std::tuple<StorageType>> &info) {
       std::string name;
       name += StorageTypeToString(std::get<StorageType>(info.param));
