@@ -10,6 +10,8 @@
 #include <fmt/core.h>
 #include <boost/algorithm/string/join.hpp>
 #include <boost/range/adaptor/transformed.hpp>
+
+#include "network/channel_constants.hpp"
 #include "common/bind.hpp"
 #include "interfaces/common_objects/peer.hpp"
 
@@ -106,6 +108,9 @@ class ChannelFactory::ChannelArgumentsProvider {
       args_ = detail::makeInterPeerChannelArguments(service_names_,
                                                     *maybe_params_.value());
     }
+
+    args_.SetMaxSendMessageSize(k_max_msg_size);
+    args_.SetMaxReceiveMessageSize(k_max_msg_size);
     return args_;
   }
 
